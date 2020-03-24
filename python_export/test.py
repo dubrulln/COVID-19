@@ -44,14 +44,22 @@ def convert_csv_to_json(csv_path):
 
             val = {}
             for i, j in enumerate(row):
-                val[headers[i]] = j
+                if headers[i] == 'Confirmed' or headers[i] == 'Deaths' or headers[i] == 'Recovered':
+                    val[headers[i]] = int(j)
+                else:
+                    val[headers[i]] = j
 
             liste.append(val)
-        print(liste)
+        # print(liste)
 
     return liste
 
 
-json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-23-2020.csv")
-with open('03-23-2020.json', 'w') as outfile:
+# TODO
+# list folder
+#  if mm-dd-yyyy.json exists do nothing
+#  else use mm-dd-yyyy.csv to create it
+
+json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-21-2020.csv")
+with open('03-21-2020.json', 'w') as outfile:
     json.dump(json_info, outfile)

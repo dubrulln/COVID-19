@@ -1,20 +1,9 @@
 import csv
 import json
+from pathlib import Path
 # import requests
-
-
-# response = requests.get('https://connect.deezer.com/oauth/auth.php')
-
-# print("reponse")
-# print(response.content)
-
-
-
-# data = [["Ravi", "9", "550"], ["Joe", "8", "500"], ["Brian", "9", "520"]]
-# with open('students.csv', 'wb') as csvfile:
-#     writer = csv.writer(csvfile, delimiter=',')
-#     writer.writerows(data)
-
+from os import listdir
+from os.path import isfile, join
 
 def convert_csv_to_json(csv_path):
 
@@ -26,13 +15,16 @@ def convert_csv_to_json(csv_path):
     with open(csv_path, 'r') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',',)
         for row in spamreader:
-            if row[0] == 'Province/State':
-                headers = row[0: 6]
-                print (headers)
+            # print (row[0])
+            if (row[0].encode('ascii', 'ignore')).decode("utf-8") == 'Province/State':
+                headers = [x.encode('ascii', 'ignore').decode("utf-8") for x in row[0: 6]]
+                # print (headers)
+                # print("version 1")
             else:
                 # headers = row[2: 5] + row[7: 10]
                 headers = ['Province/State', 'Country/Region', 'Last Update', 'Confirmed', 'Deaths', 'Recovered']
-                print (headers)
+                # print (headers)
+                # print("version 2")
                 csv_version = 2
             break
 
@@ -43,9 +35,13 @@ def convert_csv_to_json(csv_path):
                 row = row[2: 5] + row[7: 10] # remap to old format
 
             val = {}
+            # print (row)
             for i, j in enumerate(row):
                 if headers[i] == 'Confirmed' or headers[i] == 'Deaths' or headers[i] == 'Recovered':
-                    val[headers[i]] = int(j)
+                    if j:
+                        val[headers[i]] = int(j)
+                    else:
+                        val[headers[i]] = 0
                 else:
                     val[headers[i]] = j
 
@@ -60,6 +56,14 @@ def convert_csv_to_json(csv_path):
 #  if mm-dd-yyyy.json exists do nothing
 #  else use mm-dd-yyyy.csv to create it
 
-json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-21-2020.csv")
-with open('03-21-2020.json', 'w') as outfile:
-    json.dump(json_info, outfile)
+INPUT_DIR = Path("./csse_covid_19_data/csse_covid_19_daily_reports")
+
+for f in [f_ for f_ in listdir(INPUT_DIR) if isfile(join(INPUT_DIR, f_))]:
+    if f.endswith('.csv'):
+        full_path = join(INPUT_DIR, f)
+        full_new_path = join(INPUT_DIR, f.replace('.csv', '.json'))
+        print (f)
+        
+        json_info = convert_csv_to_json(full_path)
+        with open(full_new_path, 'w') as outfile:
+            json.dump(json_info, outfile)

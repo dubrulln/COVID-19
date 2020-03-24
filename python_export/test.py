@@ -24,7 +24,6 @@ def convert_csv_to_json(csv_path):
 
 
     with open(csv_path, 'r') as csvfile:
-        val = {}
         spamreader = csv.reader(csvfile, delimiter=',',)
         for row in spamreader:
             if row[0] == 'Province/State':
@@ -43,6 +42,7 @@ def convert_csv_to_json(csv_path):
             if csv_version == 2:
                 row = row[2: 5] + row[7: 10] # remap to old format
 
+            val = {}
             for i, j in enumerate(row):
                 val[headers[i]] = j
 
@@ -52,6 +52,6 @@ def convert_csv_to_json(csv_path):
     return liste
 
 
-json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-21-2020.csv")
-with open('03-21-2020.json', 'w') as outfile:
+json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-23-2020.csv")
+with open('03-23-2020.json', 'w') as outfile:
     json.dump(json_info, outfile)

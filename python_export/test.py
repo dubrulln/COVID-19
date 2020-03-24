@@ -51,8 +51,7 @@ def convert_csv_to_json(csv_path):
 
     return liste
 
-json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-22-2020.csv")
 
-
-with open('03-22-2020.json', 'w') as outfile:
+json_info = convert_csv_to_json("Z:\\Nicolas\\git\\github\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports\\03-21-2020.csv")
+with open('03-21-2020.json', 'w') as outfile:
     json.dump(json_info, outfile)

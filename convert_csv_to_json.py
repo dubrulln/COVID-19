@@ -58,7 +58,7 @@ def convert_csv_to_json(csv_path):
 
 INPUT_DIR = Path("./csse_covid_19_data/csse_covid_19_daily_reports").absolute()
 
-for f in [f_ for f_ in listdir(INPUT_DIR) if isfile(join(str(INPUT_DIR), f_))]:
+for f in [f_ for f_ in listdir(str(INPUT_DIR)) if isfile(join(str(INPUT_DIR), f_))]:
     if f.endswith('.csv'):
         full_path = join(str(INPUT_DIR), f)
         full_new_path = join(str(INPUT_DIR), f.replace('.csv', '.json'))

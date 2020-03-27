@@ -56,12 +56,12 @@ def convert_csv_to_json(csv_path):
 #  if mm-dd-yyyy.json exists do nothing
 #  else use mm-dd-yyyy.csv to create it
 
-INPUT_DIR = Path("./csse_covid_19_data/csse_covid_19_daily_reports")
+INPUT_DIR = Path("./csse_covid_19_data/csse_covid_19_daily_reports").absolute()
 
-for f in [f_ for f_ in listdir(INPUT_DIR) if isfile(join(INPUT_DIR, f_))]:
+for f in [f_ for f_ in listdir(INPUT_DIR) if isfile(join(str(INPUT_DIR), f_))]:
     if f.endswith('.csv'):
-        full_path = join(INPUT_DIR, f)
-        full_new_path = join(INPUT_DIR, f.replace('.csv', '.json'))
+        full_path = join(str(INPUT_DIR), f)
+        full_new_path = join(str(INPUT_DIR), f.replace('.csv', '.json'))
         print (f)
         
         json_info = convert_csv_to_json(full_path)

@@ -1,5 +1,6 @@
 import csv
 import json
+import datetime
 from pathlib import Path
 # import requests
 from os import listdir
@@ -42,6 +43,17 @@ def convert_csv_to_json(csv_path):
                         val[headers[i]] = int(j)
                     else:
                         val[headers[i]] = 0
+                elif headers[i] == 'Last Update':
+                    try:
+                        x = datetime.datetime.strptime(j.replace('/20 ', '/2020 '), '%m/%d/%Y %H:%M')
+                        j = x.strftime("%Y-%m-%d %H:%M:%S")
+                        # print(j)
+                    except:
+                        pass
+                    # 2/1/2020 15:23
+                    # dates.ZonedDateTime.parseDateTime(d, "yyyy-MM-dd'T'HH:mm:ss");
+                    # dates.ZonedDateTime.parseDateTime(d, "yyyy-MM-dd' 'HH:mm:ss");
+                    val[headers[i]] = j
                 else:
                     val[headers[i]] = j
 

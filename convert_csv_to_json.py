@@ -6,7 +6,7 @@ from pathlib import Path
 from os import listdir
 from os.path import isfile, join
 
-def convert_csv_to_json(csv_path):
+def convert_csv_to_json(csv_path, csv_date):
 
     headers = []
     liste = []
@@ -47,12 +47,24 @@ def convert_csv_to_json(csv_path):
                     try:
                         x = datetime.datetime.strptime(j.replace('/20 ', '/2020 '), '%m/%d/%Y %H:%M')
                         j = x.strftime("%Y-%m-%d %H:%M:%S")
-                        # print(j)
+                        # print(j)  
                     except:
                         pass
                     # 2/1/2020 15:23
                     # dates.ZonedDateTime.parseDateTime(d, "yyyy-MM-dd'T'HH:mm:ss");
                     # dates.ZonedDateTime.parseDateTime(d, "yyyy-MM-dd' 'HH:mm:ss");
+
+                    x_date = datetime.datetime.strptime(j, "%Y-%m-%d %H:%M:%S").date()
+                    # print(str(csv_date) + '  -  ' + str(x_date))
+
+                    delta_days = (x_date - csv_date).days
+                    if delta_days > 0: # LastUpdate field date is > csv date
+                        # print (delta_days)
+                        # print (csv_path)
+                        # print (row)
+                        # x = x - datetime.timedelta(days=1)
+                        j = (x_date - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+
                     val[headers[i]] = j
                 else:
                     val[headers[i]] = j
@@ -84,6 +96,6 @@ for f in [f_ for f_ in listdir(str(INPUT_DIR)) if isfile(join(str(INPUT_DIR), f_
         full_new_path = join(str(INPUT_DIR), f.replace('.csv', '.json'))
         print (f)
         
-        json_info = convert_csv_to_json(full_path)
+        json_info = convert_csv_to_json(full_path, date)
         with open(full_new_path, 'w') as outfile:
             json.dump(json_info, outfile)
